@@ -23,7 +23,7 @@ It features dynamic temperature regulation, hardware abstraction, real-time diag
 ### User Input
 - 2 console buttons (1 per seat)  
 - 1 steering wheel button (driver seat only)  
-- Each button cycles: **Off → Low → Medium → High → Off**
+- Each button cycles: **Off → Low → Medium → High → On → Off**
 
 ### Sensor Diagnostics
 - Valid sensor range: **5°C to 40°C**  
