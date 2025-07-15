@@ -128,7 +128,7 @@ sint64 on_off2 = 0;
 
 
 /* Runtime measurements */
-#define RUNTIME_MEASUREMENTS_TASK_PERIODICITY (650U)
+#define RUNTIME_MEASUREMENTS_TASK_PERIODICITY (5000U)
 #define LOAD1_TASK_PERIODICITY                (100U)
 #define LOAD2_TASK_PERIODICITY                (50U)
 
@@ -468,20 +468,14 @@ void vTempSetterTask2(void *pvParameters) {
     }
 }
 
-
-/* Due to hardware not being accessible at all times, I implemented means to test the code using software, while also being able to test the code using hardware
- * in case of the hardware being accessible. Feel free to modify the incrementing value and initial value of currentTemp variables to test different cases like
- * I mostly did.
- * NOTE: Hardware was tested, and it is working as intended.*/
 void vTempReaderTask(void *pvParameters) {
 
     TickType_t xLastWakeTime = xTaskGetTickCount();
-    uint16_t currentTemp1 = 39;  //Shouldnt exist here, it is defined in commented line number 483 to be used if hardware is available (potentiometer)
 
     for(;;){
         if (on_off){ // Driver is on
     //        uint16_t currentTemp1 = ADC_to_Temperature(ADC0_Read());
-            currentTemp1 -=2;
+            uint16_t currentTemp1 = 20;
             if (currentTemp1< 40 && currentTemp1> 5){
                 GPIO_RedLedOff();
                 error = 0;
@@ -502,13 +496,12 @@ void vTempReaderTask(void *pvParameters) {
 void vTempReaderTask2(void *pvParameters) {
 
     TickType_t xLastWakeTime = xTaskGetTickCount();
-    uint16_t currentTemp2 = 27;
 
     for(;;){
 
         if (on_off2){ // Passenger is on
                 //uint16_t currentTemp2 = ADC_to_Temperature(ADC0_Read());
-                 currentTemp2 += 4;
+                 uint16_t currentTemp2 = 27;
                  if (currentTemp2< 40 && currentTemp2> 5){
                      GPIO_ExternRedOff();
                      error1 = 0;
