@@ -1,116 +1,96 @@
 # 🚗 Seat Heater Control System – FreeRTOS on Tiva C
 
-This project implements a real-time seat heater control system for the driver and passenger seats in a car using the Tiva C (TM4C123GH6PM) microcontroller and FreeRTOS. It features dynamic temperature regulation, hardware abstraction, real-time diagnostics, and UART-based user feedback.
-🔧 Features
+This project implements a **real-time seat heater control system** for the **driver and passenger seats** in a car using the **Tiva C (TM4C123GH6PM)** microcontroller and **FreeRTOS**.  
+It features dynamic temperature regulation, hardware abstraction, real-time diagnostics, and UART-based user feedback.
 
-Heating Levels:
-  
-  Off, Low (25°C), Medium (30°C), High (35°C)
-  
-  Maintains ±2°C around the set temperature
-  
-  Heater Intensity Simulation:
-  
-  Cyan LED: High (≥10°C below target)
-  
-  Blue LED: Medium (5–10°C below target)
-  
-  Green LED: Low (2–5°C below target)
-  
-  Off: <2°C below or above target
+---
 
-User Input:
-  
-  2 console buttons (1 per seat)
-  
-  1 steering wheel button (driver seat only)
-  
-  Each button cycles through heating levels
+## 🔧 Features
 
-Sensor Diagnostics:
-  
-  Valid range: 5°C–40°C
-  
-  Red LED indicates sensor fault
-  
-  Heater disables on error; resumes on recovery
+### Heating Levels
+- Off  
+- Low: **25°C**  
+- Medium: **30°C**  
+- High: **35°C**  
+- Maintains **±2°C** around the selected level
 
-ADC Input:
-  
-  Potentiometer
-  
-  0V–3.3V → 0°C–45°C
-  
-  Only 5°C–40°C considered valid
+### Heater Intensity Simulation
+- 🟩 **Green LED**: Low (2–5°C below target)  
+- 🔵 **Blue LED**: Medium (5–10°C below target)  
+- 🔷 **Cyan LED**: High (≥10°C below target)  
+- ❌ Heater turns **Off** if within 2°C or above target
 
-UART Output:
-  
-  Real-time status: temperature, heating level, heater state
+### User Input
+- 2 console buttons (1 per seat)  
+- 1 steering wheel button (driver seat only)  
+- Each button cycles: **Off → Low → Medium → High → Off**
 
-🧠 Software Architecture
-  RTOS Configuration
-  
-  Kernel: FreeRTOS
-  
-  Total Tasks: 12
+### Sensor Diagnostics
+- Valid sensor range: **5°C to 40°C**  
+- ❗ **Red LED** indicates sensor fault  
+- Heater disables on error, resumes automatically on recovery
 
-Used APIs:
-  
-  vTaskDelay, vTaskDelayUntil
-  
-  vTaskResume, vTaskSuspend, vTaskPrioritySet
-  
-  xSemaphoreGive, xSemaphoreTake
-  
-  Event groups, queues, and mutexes for resource and task management
+### ADC Input
+- LM35 or 10k potentiometer  
+- 0V–3.3V → 0°C–45°C  
+- Only **5°C–40°C** considered valid
 
+### UART Output
+- Displays real-time:
+  - Current temperature
+  - Heating level
+  - Heater intensity/state
 
-Inter-Task Communication:
-  Method	-->  Purpose:
-  
-   Queues	-->  Transmit temperature readings.
-   
-   Semaphores	-->  Signal button press events for heater turn ON and OFF.
-   
-   Mutexes	   -->   Protect UART and shared data.
-   
-   Events	   -->   Manage heater logic, buttons set the desired temperature using events.
+---
 
-Responsiveness
+## 🧠 Software Architecture
 
-  Buttons use edge-triggered GPIO interrupts to minimize latency and CPU usage
+### RTOS Configuration
+- **Kernel**: FreeRTOS  
+- **Total Tasks**: 12  
+- **APIs Used**:
+  - `vTaskDelay`, `vTaskDelayUntil`  
+  - `vTaskResume`, `vTaskSuspend`, `vTaskPrioritySet`  
+  - `xSemaphoreGive`, `xSemaphoreTake`  
+  - Queues, mutexes, event groups  
 
+### Inter-Task Communication
 
+| Method      | Purpose                                       |
+|-------------|-----------------------------------------------|
+| Queues      | Transmit temperature readings                 |
+| Semaphores  | Signal button press events                    |
+| Mutexes     | Protect UART and shared resources             |
+| EventGroups | Manage heater state and temperature changes   |
 
-🔌 Hardware Setup
+### Responsiveness
+- Buttons handled via **edge-triggered GPIO interrupts**  
+- Minimizes latency and reduces CPU usage
 
-  Microcontroller: Tiva C TM4C123GH6PM
-  
-  Temperature Input: LM35 sensor or 10k potentiometer
-  
-  Output LEDs: Indicate heater intensity and diagnostic status
-  
-  UART Terminal: Display current system status
+---
 
-📊 Diagnostics and CPU Monitoring
+## 🔌 Hardware Setup
 
-  Sensor Fault Detection:
-  
-  Out-of-range readings trigger fault state and red LED
-  
-  Recovery auto-detected when sensor becomes valid again
+- **MCU**: Tiva C TM4C123GH6PM  
+- **Temp Input**: LM35 sensor or 10k potentiometer  
+- **LEDs**: Show heater intensity + diagnostic state  
+- **UART Terminal**: Displays live system info  
 
-CPU Load Measurement:
+---
 
-  Manual runtime measurement via GPTM
-  
-  Accuracy: 0.1 ms
-  
-  Compared against FreeRTOS statistics (for validation only)
+## 📊 Diagnostics and CPU Monitoring
 
+### Sensor Fault Detection
+- Invalid temperature → red LED on + heater disabled  
+- Auto-recovery once sensor gives valid readings again
 
+### CPU Load Measurement
+- Measured via GPTM manually (0.1 ms resolution)  
+- Compared against FreeRTOS runtime stats (for validation)
 
+---
 
-🧑‍💻 Author
+## 👨‍💻 Author
 
-Developed by Youssef Tamer as part of the Edges Advanced Embedded Diploma.
+Developed by **Youssef Tamer**  
+Part of the **Edges Advanced Embedded Diploma**
